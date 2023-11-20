@@ -2,9 +2,8 @@ import React, { FC, useEffect, useState } from 'react';
 import './styles/style.css';
 import { Orbit } from './modules/ds';
 import OrbitCard from './components/OrbitCard';
-import NavigationMain from './components/NavigationMain';
-import Breadcrumbs from './components/Breadcrumbs';
-import { orbitsData } from './modules/orbitsData';
+
+import { getAllOrbits } from './modules/get-all-orbits';
 
 
 const OrbitsPage: FC = () => {
@@ -14,23 +13,18 @@ const OrbitsPage: FC = () => {
     useEffect(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        var orbitName = urlParams.get('orbit_name') || '';
+        var orbitName = urlParams.get('orbit_name') || "";
         setSearchText(orbitName);
-
+    
         const loadOrbits = async () => {
-            try {
-                const result = orbitsData.filter((orbit) =>
-                    orbit.Name.toLowerCase().includes(orbitName.toLowerCase())
-                );
-                console.log(result)
-                setOrbits(result);
-            } catch (error) {
-                console.error("Ошибка при загрузке объектов:", error);
-            }
+            const result = await getAllOrbits(orbitName);
+            console.log(result);
+            setOrbits(result);
         }
-
+    
         loadOrbits();
-    }, []);
+      }, []);
+    
 
     const handleStatusChange = (orbitName: string, newStatus: boolean) => {
         setOrbits((orbits) =>
@@ -42,13 +36,11 @@ const OrbitsPage: FC = () => {
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        window.location.href = `/orbits?orbit_name=${searchText}`;
+        window.location.href = `/orbits-deploy/?orbit_name=${searchText}`;
     };
 
     return (
         <div>
-            <NavigationMain/>
-            <Breadcrumbs/>
             <div className="search-form">
                 <form onSubmit={handleSearchSubmit}>
                     <input
@@ -69,10 +61,10 @@ const OrbitsPage: FC = () => {
                         imageUrl={orbit.ImageURL}
                         orbitName={orbit.Name}
                         orbitStatus={orbit.IsAvailable}
-                        orbitDetailed={`/orbits/${orbit.Name}`}
-                        changeStatus={`/orbits/change_status/${orbit.Name}`}
+                        orbitDetailed={window.location.href.split('?')[0]+"orbit?orbit_name="+orbit.Name}
+                        changeStatus={``}
                         onStatusChange={handleStatusChange}
-                    />
+                    ></OrbitCard>
                 ))}
             </div>
         </div>

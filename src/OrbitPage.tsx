@@ -1,24 +1,30 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import './styles/style.css'
-import { useParams } from 'react-router-dom';
-import NavigationMain from './components/NavigationMain';
-import Breadcrumbs from './components/Breadcrumbs';
-import { orbitsData } from './modules/orbitsData';
+import { Orbit } from './modules/ds';
+import { getOrbitByName } from './modules/get-orbit-by-name';
 
 
 const OrbitPage: FC = () => {
-    const { orbit_name } = useParams();
-    const orbit = orbitsData.find((orbit) => orbit.Name === orbit_name);
+    
+  const [orbit, setOrbit] = useState<Orbit>()
 
-    useEffect(() => {
-        console.log("orbit_name: ", orbit_name);
-    }, [orbit_name]);
+  useEffect(() => {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString)
+      const regionName = urlParams.get('orbit_name')
+  
+      const loadRegion = async () => {
+          const result = await getOrbitByName(String(regionName))
+          setOrbit(result)
+      }
+  
+      loadRegion()
+
+  }, []);
 
 
     return (
         <div>
-            <NavigationMain/>
-            <Breadcrumbs/>
             <div className="card-sub">
                 <div className="card-content-sub">
                     <img src={`${orbit?.ImageURL}`} className="card_image" alt="картинка" />
@@ -30,7 +36,7 @@ const OrbitPage: FC = () => {
                         <p>Описание: {orbit?.Description}</p>
                     </div>
                 </div>
-                <a className="button page_button" href="../orbits">Назад</a>
+                <a className="button page_button" href="/orbits-deploy/">Назад</a>
             </div>
         </div>
     )

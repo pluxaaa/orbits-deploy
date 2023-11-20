@@ -1,6 +1,6 @@
 {
-  "homepage": ".",
-  "name": "my-app",
+  "homepage": "https://pluxaaa.github.io/orbits-deploy",
+  "name": "orbits-deploy",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -32,5 +32,16 @@
     "gh-pages": "^6.0.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
+  },
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pluxaaa/orbits-deploy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pluxaaa/orbits-deploy/issues"
   }
 }
